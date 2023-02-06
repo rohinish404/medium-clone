@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar'
 import Banner from '@/components/Banner'
 import {sanityClient,urlFor} from "sanity.js"
 import { Post } from 'typings'
-
+import Link from 'next/link'
 
 interface Props{
   posts:[Post]
@@ -23,6 +23,7 @@ export default function Home({posts}:Props) {
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap:3 md:gap-6 p-2 md:p-6'>
           {posts.map(function(post){
             return(
+              <Link href={`posts/${post.slug.current}`}>
               <div className='border'>
               <img className='h-60 w-full object-cover' src={urlFor(post.mainImage).url()!}/> 
               <div className='flex justify-between items-center p-3'> 
@@ -33,6 +34,7 @@ export default function Home({posts}:Props) {
                 <img className='w-12 h-12 rounded-full' src={urlFor(post.author.image).url()!}/>
               </div>
               </div>
+              </Link>
             );
           })}
         </div>
