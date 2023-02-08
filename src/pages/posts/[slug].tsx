@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar'
 import { GetStaticProps } from 'next'
-import React from 'react'
+import React, { Children } from 'react'
+import PortableText from 'react-portable-text'
 import {sanityClient,urlFor} from "sanity.js"
 import { Post } from 'typings'
 interface Props{
@@ -10,7 +11,40 @@ function Post({post}:Props) {
   return (
     <div>
       <Navbar />
-      <img src={urlFor(post.mainImage).url()!}/>
+      <img className='w-full h-60 object-cover' src={urlFor(post.mainImage).url()!}/>
+      <article className='mt-2 max-w-3xl mx-auto'>
+        <h1 className='text-3xl p-4'>{post.title}</h1>
+        <div className='flex items-center space-x-2 px-4 py-2'>
+            <img className='h-10 w-10 rounded-full oject-cover' src={urlFor(post.author.image).url()!} />
+            <p>Blog Post by<span className='text-green-400'> {post.author.name}</span> -Published at {new Date(post._createdAt).toLocaleString()}</p>
+        </div>
+<div className='m-4'>
+    <PortableText 
+        className='' 
+        dataset={process.env.NEXT_PUBLIC_SANITY_DATASET}
+        projectId={process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}
+        content={post.body}
+        serializers={
+            {
+                h1:(props:any) =>{
+                    <h1 className='text-2xl font-bold my-5'>{...props}</h1>
+                },
+                h2:(props:any) =>{
+                    <h1 className='text-xl font-bold my-5'>{...props}</h1>
+                },
+                li:({Children}:any) =>{
+                    <h1 className='ml-4 list-disc'>{Children}</h1>
+                },
+                link:({href,children}:any) =>{
+                    <a href={href} className="text-blue-500 hover:underline">{children}</a>
+                }
+            }
+           
+        }
+        />
+
+</div>
+      </article>
     </div>
   )
 }
